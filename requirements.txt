@@ -1,4 +1,7 @@
 flask
+gunicorn
+
+# Data & ML
 pandas
 joblib
 scikit-learn
@@ -8,7 +11,7 @@ numpy
 Pillow
 tqdm
 
-# Core ML / Vision Libraries
+# Core Vision Libraries
 opencv-python-headless
 dlib
 mtcnn
@@ -16,12 +19,3 @@ mediapipe
 insightface
 torch
 torchvision
-dlib --only-binary :all:
-
-
-# --- IMPORTANT ---
-# Add other major libraries ONLY if your code directly imports them.
-# For example, if you use TensorFlow, add:
-tensorflow
-#
-# Or if you use PyTorch, add:
