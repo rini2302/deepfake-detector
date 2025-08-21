@@ -3,7 +3,6 @@ import cv2
 import dlib
 import numpy as np
 from mtcnn import MTCNN
-from imutils import face_utils
 from scipy.spatial import distance as dist
 from pathlib import Path
 
@@ -44,7 +43,13 @@ class BlinkDetector:
                 x, y, w, h = face['box']
                 rect = dlib.rectangle(x, y, x + w, y + h)
                 shape = self.predictor(rgb, rect)
-                shape = face_utils.shape_to_np(shape)
+
+                # This block replaces face_utils.shape_to_np(shape)
+                coords = np.zeros((shape.num_parts, 2), dtype="int")
+                for i in range(0, shape.num_parts):
+                    coords[i] = (shape.part(i).x, shape.part(i).y)
+
+                shape = coords
 
                 leftEye = shape[42:48]
                 rightEye = shape[36:42]
