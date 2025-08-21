@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detector</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        #upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        input[type="file"] {
+            border: 2px dashed #bdc3c7;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        input[type="file"]:hover {
+            border-color: #3498db;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        button:not(:disabled):hover {
+            background-color: #2980b9;
+        }
+        #result-container {
+            margin-top: 30px;
+            font-size: 1.2em;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .progress { color: #555; }
+        .real { color: #27ae60; font-weight: bold; }
+        .fake { color: #c0392b; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Deepfake Detection Engine</h1>
+        <p>Upload a video file to analyze its authenticity.</p>
+
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="video-file" name="video" accept="video/*" required>
+            <button type="submit" id="submit-button">Analyze Video</button>
+        </form>
+
+        <div id="result-container">
+            </div>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('upload-form');
+        const submitButton = document.getElementById('submit-button');
+        const resultContainer = document.getElementById('result-container');
+        const videoFileInput = document.getElementById('video-file');
+
+        uploadForm.addEventListener('submit', async (event) => {
+            // 1. Prevent the default form submission (which reloads the page)
+            event.preventDefault();
+
+            // 2. Show a loading message and disable the button
+            resultContainer.innerHTML = '<p class="progress">Uploading and analyzing video... Please wait. This may take a moment. ⏳</p>';
+            submitButton.disabled = true;
+            submitButton.innerText = 'Processing...';
+            
+            // 3. Create a FormData object from the form to send the file
+            const formData = new FormData(uploadForm);
+
+            try {
+                // 4. Send the file to the Flask backend using the Fetch API
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    // Try to get a more specific error from the server's JSON response
+                    const errorData = await response.json().catch(() => null);
+                    const errorMessage = errorData?.error || `Server responded with status: ${response.status}`;
+                    throw new Error(errorMessage);
+                }
+
+                // 5. Get the JSON result from the response
+                const data = await response.json();
+
+                // 6. Display the result on the page
+                if (data.error) {
+                    resultContainer.innerHTML = `<p class="fake">Error: ${data.error}</p>`;
+                } else {
+                    resultContainer.innerHTML = `
+                        <h3>Analysis Complete</h3>
+                        <p>This video is likely <span class="real">${data.real_percentage}% REAL</span>.</p>
+                        <p>This video is likely <span class="fake">${data.fake_percentage}% FAKE</span>.</p>
+                    `;
+                }
+            } catch (error) {
+                // 7. Handle network errors or other exceptions
+                console.error('Error during fetch operation:', error);
+                resultContainer.innerHTML = `<p class="fake">An error occurred: ${error.message}. Please check the console for details.</p>`;
+            } finally {
+                // 8. Re-enable the button and clear the file input for the next upload
+                submitButton.disabled = false;
+                submitButton.innerText = 'Analyze Video';
+                videoFileInput.value = ''; // Clear the selected file
+            }
+        });
+    </script>
+
+</body>
+</html>
