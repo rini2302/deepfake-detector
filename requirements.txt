@@ -7,7 +7,6 @@ scipy
 numpy
 Pillow
 tqdm
-imutils
 
 # Core ML / Vision Libraries
 opencv-python-headless
