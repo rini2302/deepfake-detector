@@ -44,7 +44,7 @@ class BlinkDetector:
                 rect = dlib.rectangle(x, y, x + w, y + h)
                 shape = self.predictor(rgb, rect)
 
-                # This block replaces face_utils.shape_to_np(shape)
+               
                 coords = np.zeros((shape.num_parts, 2), dtype="int")
                 for i in range(0, shape.num_parts):
                     coords[i] = (shape.part(i).x, shape.part(i).y)
