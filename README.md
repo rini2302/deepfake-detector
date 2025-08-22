@@ -1,6 +1,6 @@
 Deepfake Detection Engine
 
-A web-based tool to analyze video files and determine the likelihood of them being a deepfake. This project uses a sophisticated Python pipeline with multiple feature extractors and a machine learning model to provide a real/fake probability score.
+A web-based tool to analyze video files and determine the likelihood of them being a deepfake. This project uses a sophisticated Python pipeline with multiple feature extractors and a machine learning model to provide a real/fake probability score. Here, the model is also from scratch trained, and the accuracy is approximately 88-89%.
 
 Features
 
