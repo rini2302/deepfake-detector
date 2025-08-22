@@ -71,16 +71,13 @@ Open your web browser and navigate to `http://127.0.0.1:5000`. You can now uploa
 
 Project Structure
 
-.
 ├── app.py                  # Flask web server
 ├── pipeline.py             # Core deepfake detection logic
 ├── requirements.txt        # Python package dependencies
 ├── packages.txt            # System-level dependencies for Vercel
-├── Dockerfile              # Docker configuration for Render/other hosts
 ├── vercel.json             # Vercel deployment configuration
 ├── .gitignore              # Files to be ignored by Git
 ├── models/                 # Directory for ML models
 │   └── ...
 └── templates/
     └── index.html          # Frontend HTML and JavaScript
-```
