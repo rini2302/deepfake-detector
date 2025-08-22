@@ -20,7 +20,6 @@ Technology Stack
 * Frontend: HTML, CSS, JavaScript (Fetch API)
 * Machine Learning: Scikit-learn, Pandas, Joblib
 * Computer Vision: OpenCV, Dlib, MediaPipe, InsightFace
-* Deployment: Vercel / Render (Docker)
 
 Getting Started
 
